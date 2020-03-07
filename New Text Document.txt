@@ -1,0 +1,163 @@
+
+SELECT DECODE(100778,100779, 'Equal', 'Not Equal')from users;
+
+FIRST VALUE
+SELECT NAME, SALARY,   
+       FIRST_VALUE(NAME) OVER (ORDER BY ID ASC) AS LeastExpensive   
+FROM [dbo].[Customer]  
+WHERE ID = 5;
+select * from [dbo].[Customer]
+
+
+LAST VALUE
+USE TEST;  
+GO  
+SELECT NAME, SALARY,   
+       LAST_VALUE(NAME) OVER (ORDER BY SALARY ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS LeastExpensive   
+FROM [dbo].[Customer]  
+
+SELECT ID,NAME
+FROM [dbo].[Customer]
+ORDER BY Salary
+OFFSET 5 ROWS;
+
+CURSOR:
+
+IS POINTOR ,
+DECLARE @ID INT
+DECLARE @NAME varchar(255) 
+DECLARE CUSTOMERCURSOR CURSOR FOR 
+SELECT ID ,NAME FROM [dbo].[Customer]
+WHERE ID<=4
+
+OPEN  CUSTOMERCURSOR
+FETCH Next FROM CUSTOMERCURSOR into  @id, @NAME
+while (@@FETCH_STATUS=0)
+BEGIN 
+PRINT 'ID ='+CAST (@ID as navchar(10)) + '  NAME = ' + @NAME
+FETCH Next FROM CUSTOMERCURSOR into  @id, @NAME
+END
+CLOSE CUSTOMERCURSOR
+DEALLOCATE CUSTOMERCURSOR
+
+___________________________________________
+alter PROCEDURE [dbo].[sp_GetCustomerAddress]
+@NAME  varchar (10),
+@AGE  int output
+
+AS
+Begin 
+select *  from [dbo].[Customer] where NAME= @NAME 
+end
+declare @numb int
+EXEC [dbo].[sp_GetCustomerAddress] 'Ramesh',@numb OUT 
+PRINT @numb
+_____________________________________________
+
+declare @ID int 
+declare @NAME  varchar(255);
+
+declare cursor4 cursor for 
+
+select ID,NAME  from [dbo].[Customer] where ID<= 5
+open cursor4;
+ 
+fetch NEXT from cursor4 into @ID ,@NAME ;
+WHILE (@@FETCH_STATUS=0)
+BEGIN 
+PRINT 'ID = '+ CAST (@ID AS VARCHAR(10)) +'NAME ='+@NAME
+fetch NEXT from cursor4 into @ID ,@NAME ;
+
+end
+CLOSE cursor4
+
+____________________________________________________________________
+Userdefind function 
+Create  function  FnGetEmployeeFullName(
+@id VARCHAR(10))
+Returns table 
+as	
+return (select * from [dbo].[Customer] where ID=@id)
+__________________________________________________________
+exceptions
+
+begin try 
+
+select name+age from [dbo].[Customer]
+end try 
+begin catch 
+print'cannot add numerical value with a string value'
+end catch 
+go 
+.................................................
+declare @cal1 char;
+declare @cal2 int;
+
+begin try
+set  @cal1='man';
+set @cal2=@cal1+0;
+end try 
+begin catch 
+print error_message()
+end catch
+go 
+__________________________________________________
+
+
+COLUMN DEPTNO HEADING Department
+SQL> COLUMN ENAME HEADING Employee
+SQL> COLUMN SAL HEADING Salary
+SQL> COLUMN COMM HEADING Commission
+SQL> SELECT DEPTNO, ENAME, SAL, COMM
+  2  FROM EMP
+  3  WHERE JOB = 'SALESMAN';
+SQL*Plus displays the following output:
+
+Department Employee       Salary Commission
+---------- ---------- ---------- ----------
+        30 ALLEN            1600        300
+        30 WARD             1250        500
+        30 MARTIN           1250       1400
+        30 TURNER           1500          0
+___________________________________________________
+set operators
+
+ combined the two or more tables
+ union 
+ ITS WILL COMBINED RESULT OF TWO OR MORE THAN TWO SELCT SETEMENTS 
+WITH OUT DUPLICATE DATA
+
+SELECT * FROM [dbo].[EMP_HYD]
+UNION 
+SELECT * FROM [dbo].[EMP_CHENNAI]
+...........................................
+
+ union all
+SAME TO SAME UNION ITS GIVE WITH DUPLICATE VALUES
+SELECT * FROM [dbo].[EMP_HYD]
+UNION ALL
+SELECT * FROM [dbo].[EMP_CHENNAI] 
+
+....................................................
+intersect
+
+ITS WILL GIVE THE COMMON VALUES 
+SELECT * FROM [dbo].[EMP_HYD]
+INTERSECT
+SELECT * FROM [dbo].[EMP_CHENNAI]
+ ............................................
+ EXcept
+when you want retriview 
+
+to retuen all vsalues from left side tables whicj=h are found in the rightsaide table 
+SELECT * FROM [dbo].[EMP_HYD]
+EXCEPT
+SELECT * FROM [dbo].[EMP_CHENNAI]
+
+ rules
+two selected statements number coulmns should be same 
+order of the coulmn should be same 
+batatypes of the coulmns should be same 
+
+ 
+
